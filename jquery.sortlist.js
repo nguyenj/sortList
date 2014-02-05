@@ -23,7 +23,7 @@
     var settings = $.extend({
       sortBy: $(this).data('sort-by') || "name",
       sortOrder: $(this).data('sort-order') || "desc",
-      sortGroup: $(this).data('sort-group').toString() || true
+      sortGroup: $(this).data('sort-group') != undefined ? $(this).data('sort-group').toString() : true
     }, options);
 
     return this.each(function() {
@@ -93,6 +93,10 @@
 
     });
   }
+
+  $(function() {
+    $('.sort').sortList();
+  });
 
 })(jQuery);
 
