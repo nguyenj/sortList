@@ -52,7 +52,9 @@
 
       // Sort the letters
       if ( sortOrder.toLowerCase() == "asc") {
-        list.letters.reverse();
+        list.letters.sort().reverse();
+      } else {
+        list.letters.sort();
       }
 
       _tempList = [];
@@ -68,9 +70,16 @@
         }
 
         // Sort items in each letter list
-        if ( sortOrder.toLowerCase() == "asc") {
-          list[letter].reverse();
-        }
+        list[letter].sort(function(a, b) {
+          if ( $(a).find('.name').text() < $(b).find('.name').text() ) {
+            if ( sortOrder.toLowerCase() == "asc" )  {
+              return 1;
+            } else {
+              return -1;
+            }
+          }
+          return 0;
+        });
 
         $.each(list[letter], function(i, items) {
           // If grouping is false
