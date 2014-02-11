@@ -23,10 +23,11 @@
     var settings = $.extend({
       sortBy: $(this).data('sort-by') || "name",
       sortOrder: $(this).data('sort-order') || "desc",
-      sortGroup: $(this).data('sort-group') != undefined ? $(this).data('sort-group').toString() : true
+      sortGroup: $(this).data('sort-group') != undefined ? $(this).data('sort-group').toString() : true,
+      sortID: 0
     }, options);
 
-    return this.each(function() {
+    return this.each(function(i, obj) {
 
       // define vars
       var $currentList = $(this);
@@ -34,6 +35,7 @@
       var sortOrder = settings.sortOrder;
       var sortGroup = settings.sortGroup;
       var list = { letters: [] };
+      var $alphabetHeadings = $('<ul />', { 'class': 'letter-headings' });
 
       // check if the specified list exists
       // loop through each item create a letter container
@@ -60,13 +62,28 @@
       _tempList = [];
       $.each(list.letters, function(i, letter) {
         // If grouping is true
-        if ( sortGroup ) {
+        if ( sortGroup === "true" ) {
           // Define letter container
           var $letterList = $('<li />', { 
             "class": "letter " + letter.toLowerCase(),
             "text": letter
           });
+          var _$letterHeading = $letterList.clone();
           var $letterListContainer = $('<ul />');
+
+          // Set active class for first item
+          if ( i == 0 ) {
+            $letterList.addClass('active');
+            _$letterHeading.addClass('active');
+          }
+
+          // Append the cloned letter heading to the alphabet heading list container
+          $alphabetHeadings.append(_$letterHeading);
+
+          // Append the letter list container to the letter list
+          // Push each letter list to the temporary list
+          $letterList.append($letterListContainer);
+          _tempList.push($letterList)
         }
 
         // Sort items in each letter list
@@ -82,23 +99,33 @@
         });
 
         $.each(list[letter], function(i, items) {
-          // If grouping is false
-          if ( !sortGroup ) {
-            _tempList.push($(items));
-          } else {
+          // If grouping is true
+          if ( sortGroup === "true" ) {
             $letterListContainer.append(items);
+          } else {
+            _tempList.push($(items));
           }
         });
 
-        // If grouping is true
-        if ( sortGroup ) {
-          $letterList.append($letterListContainer);
-          _tempList.push($letterList)
-        }
       });
+      
+      // Insert the letter headings list before the sort list
+      $currentList.before($alphabetHeadings.attr('data-sort-id', i).addClass('sort-headings no-list'));
 
       // Append the new list to the specified list container
-      $currentList.empty().append(_tempList);
+      $currentList.attr('data-sort-id', i).empty().append(_tempList);
+
+      $('[data-sort-id="'+i+'"]').on('click', '.letter', function(e) {
+        var $el = $(this);
+        var letter = $el.text().toLowerCase();
+
+        $el.siblings().removeClass('active');
+        $el.addClass('active');
+
+        $('.sort[data-sort-id="'+i+'"]').find('.letter').removeClass('active');
+        $('.sort[data-sort-id="'+i+'"]').find('.'+letter).addClass('active');
+
+      });
 
     });
   }

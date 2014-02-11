@@ -7,16 +7,38 @@
   padding: 0;
   list-style: none;
 }
-.no-list ul{
+.no-list li{
+  display: inline-block;
+}
+.sort-headings{
+}
+.sort-headings li{
+  width: 4%;
+  color: #3296C8;
+  text-align: center;
+  cursor: pointer;
+}
+.sort-headings li:hover{
+  background-color: #cdf6ff;
+}
+.sort-headings li.active{
+  background-color: #3296C8;
+  color: #fff;
+}
+.sort ul{
   margin: 12px 0 0 0;
   padding: 0;
   list-style: none;
 }
-.no-list .letter{
+.sort .letter{
+  display: none;
   margin-top: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid;
+  padding-top: 24px;
+  border-top: 1px solid;
 }
-.no-list .letter li{
+.sort .letter.active{
+  display: block;
+}
+.sort .letter li{
   margin-bottom: 1em;
 }
